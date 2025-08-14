@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from 'mongoose'
+import mongoose, { InferSchemaType, ObjectId } from 'mongoose'
 
 const userSchema = new mongoose.Schema(
 	{
@@ -24,7 +24,9 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true }
 )
 
-type User = InferSchemaType<typeof userSchema>
+export interface IUser extends InferSchemaType<typeof userSchema>, Document {
+	_id: ObjectId
+}
 
 const User = mongoose.model('User', userSchema)
 
