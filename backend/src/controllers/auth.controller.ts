@@ -113,22 +113,44 @@ export const logout = (req: Request, res: Response) => {
 
 export const updateUser = async (req: AuthRequest, res: Response) => {
 	try {
-		const { profilePic } = req.body
-		if (!profilePic)
-			res.status(400).json({ message: 'Profile picture is required' })
-		if (req.user) {
+		if (!req.file) {
+			res.status(400).json({ message: 'No image file provided.' })
+		} else if (req.user) {
+			const fileUri = `data:${
+				req.file.mimetype
+			};base64,${req.file.buffer.toString('base64')}`
 			const userId = req.user._id
-
-			const uploadResponse = await cloudinary.uploader.upload(profilePic)
+			const result = await cloudinary.uploader.upload(fileUri, {
+				folder: 'user-avatars',
+				public_id: req.file.filename + userId,
+				overwrite: true,
+			})
 			const updateUser = await User.findByIdAndUpdate(
 				userId,
 				{
-					profilePic: uploadResponse.secure_url,
+					profilePic: result.secure_url,
 				},
 				{ new: true }
 			)
 			res.status(200).json(updateUser)
 		}
+
+		// const { profilePic } = req.body
+		// if (!profilePic)
+		// 	res.status(400).json({ message: 'Profile picture is required' })
+		// if (req.user) {
+		// 	const userId = req.user._id
+
+		// 	const uploadResponse = await cloudinary.uploader.upload(profilePic)
+		// 	const updateUser = await User.findByIdAndUpdate(
+		// 		userId,
+		// 		{
+		// 			profilePic: uploadResponse.secure_url,
+		// 		},
+		// 		{ new: true }
+		// 	)
+		// 	res.status(200).json(updateUser)
+		// }
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log('Error updateUser controller:', error.message)

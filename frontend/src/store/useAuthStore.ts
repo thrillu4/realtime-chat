@@ -33,12 +33,13 @@ export const useAuthStore = create<IAuthStore>((set) => ({
 			const res = await axiosInstance.post('/auth/signup', data)
 			set({ authUser: res.data })
 			toast.success('Account created successfully!')
-		} catch (error: unknown) {
+		} catch (error) {
 			if (error instanceof AxiosError) {
-				toast.error(error.response?.data?.message ?? error.message)
+				console.error(error.response?.data?.message ?? error.message)
 			} else if (error instanceof Error) {
-				toast.error(error.message)
+				console.error(error.message)
 			}
+			toast.error('Something went wrong!')
 		} finally {
 			set({ isSigningUp: false })
 		}
@@ -50,10 +51,11 @@ export const useAuthStore = create<IAuthStore>((set) => ({
 			toast.success('Logged out successfully!')
 		} catch (error) {
 			if (error instanceof AxiosError) {
-				toast.error(error.response?.data?.message ?? error.message)
+				console.error(error.response?.data?.message ?? error.message)
 			} else if (error instanceof Error) {
-				toast.error(error.message)
+				console.error(error.message)
 			}
+			toast.error('Something went wrong!')
 		}
 	},
 	login: async (data) => {
@@ -64,12 +66,34 @@ export const useAuthStore = create<IAuthStore>((set) => ({
 			toast.success('Logged in successfully!')
 		} catch (error) {
 			if (error instanceof AxiosError) {
-				toast.error(error.response?.data?.message ?? error.message)
+				console.error(error.response?.data?.message ?? error.message)
 			} else if (error instanceof Error) {
-				toast.error(error.message)
+				console.error(error.message)
 			}
+			toast.error('Something went wrong!')
 		} finally {
 			set({ isLoggingIn: false })
+		}
+	},
+	updateProfile: async (data) => {
+		set({ isUpdatingProfile: true })
+		try {
+			const res = await axiosInstance.put('/auth/update-user', data, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			})
+			set({ authUser: res.data })
+			toast.success('Profile image updated successfully!')
+		} catch (error) {
+			if (error instanceof AxiosError) {
+				console.error(error.response?.data?.message ?? error.message)
+			} else if (error instanceof Error) {
+				console.error(error.message)
+			}
+			toast.error('Something went wrong!')
+		} finally {
+			set({ isUpdatingProfile: false })
 		}
 	},
 }))

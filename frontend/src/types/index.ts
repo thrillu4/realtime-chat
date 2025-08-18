@@ -6,8 +6,8 @@ export interface User {
 	fullName: string
 	password: string
 	profilePic: string
-	createdAt: Date
-	updatedAt: Date
+	createdAt: string
+	updatedAt: string
 }
 
 export interface IAuthStore {
@@ -20,6 +20,7 @@ export interface IAuthStore {
 	signUp: (data: SignUpType) => Promise<void>
 	logout: () => void
 	login: (data: LoginType) => Promise<void>
+	updateProfile: (file: FormData) => void
 }
 
 export const SignUpSchema = z.object({
