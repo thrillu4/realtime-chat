@@ -23,6 +23,11 @@ export interface IAuthStore {
 	updateProfile: (file: FormData) => void
 }
 
+export interface IUseTheme {
+	theme: string
+	setTheme: (theme: string) => void
+}
+
 export const SignUpSchema = z.object({
 	fullName: z.string().min(3, 'Enter at least 3 characters!'),
 	email: z.email('Incorrect email address!'),
