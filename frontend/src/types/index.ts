@@ -10,17 +10,39 @@ export interface User {
 	updatedAt: string
 }
 
+export interface Message {
+	senderId: string
+	receiverId: string
+	text: string
+	image: string
+	createdAt: string
+	updatedAt: string
+}
+
 export interface IAuthStore {
 	authUser: null | User
 	isSigningUp: boolean
 	isLoggingIn: boolean
 	isUpdatingProfile: boolean
 	isCheckingAuth: boolean
+	onlineUsers: Omit<User, 'password'>[]
 	checkAuth: () => void
 	signUp: (data: SignUpType) => Promise<void>
 	logout: () => void
 	login: (data: LoginType) => Promise<void>
 	updateProfile: (file: FormData) => void
+}
+
+export interface IChatStore {
+	users: Omit<User, 'password'>[]
+	messages: Message[]
+	selectedUser: null | Omit<User, 'password'>
+	isUsersLoading: boolean
+	isMessagesLoading: boolean
+	getUsers: () => Promise<void>
+	getMessages: (userId: string) => Promise<void>
+	setSelectedUser: (selectedUser: Omit<User, 'password'> | null) => void
+	sendMessage: (messageData: Partial<Message>) => Promise<void>
 }
 
 export interface IUseTheme {
