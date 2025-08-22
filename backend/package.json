@@ -3,10 +3,11 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"dev": "nodemon",
 		"build": "tsc",
-		"start": "node dist/server.js"
+		"start": "tsx src/index.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -22,6 +23,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.17.1",
 		"multer": "^2.0.2",
+		"realtime-chat": "file:..",
 		"socket.io": "^4.8.1"
 	},
 	"devDependencies": {
@@ -31,6 +33,7 @@
 		"@types/node": "^24.2.1",
 		"nodemon": "^3.1.10",
 		"ts-node": "^10.9.2",
+		"tsx": "^4.20.4",
 		"typescript": "^5.9.2"
 	}
 }

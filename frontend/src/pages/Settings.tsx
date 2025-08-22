@@ -15,7 +15,7 @@ const Settings = () => {
 	const { theme, setTheme } = useThemeStore()
 
 	return (
-		<div className='h-screen container mx-auto px-4 pt-20 max-w-5xl'>
+		<div className='min-h-screen container mx-auto px-4 pt-20 max-w-5xl'>
 			<div className='space-y-6'>
 				<div className='flex flex-col gap-1'>
 					<h2 className='text-lg font-semibold'>Theme</h2>
@@ -29,7 +29,7 @@ const Settings = () => {
 						<button
 							key={t}
 							className={`
-								group flex flex-col items-center gap-1.5 p-2 rounded-lg transition-colors
+								group flex flex-col items-center gap-1.5 p-2 rounded-lg cursor-pointer transition-colors
 								${theme === t ? 'bg-base-200' : 'hover:bg-base-200/50'}
 							`}
 							onClick={() => setTheme(t)}
