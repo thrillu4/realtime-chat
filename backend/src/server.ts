@@ -2,8 +2,8 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import path from 'path'
-import authRouter from './routes/auth.route'
-import messageRoutes from './routes/message.route'
+import authRouter from './routes/auth.route.js'
+import messageRoutes from './routes/message.route.js'
 
 const app = express()
 const __dirname = path.resolve()
