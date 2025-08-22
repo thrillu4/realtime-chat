@@ -67,7 +67,7 @@ const Login = () => {
 								/>
 							</div>
 							{errors.email && (
-								<div className='text-red-700 text-sm '>
+								<div className='text-red-700 text-sm pt-2 '>
 									{errors.email.message}
 								</div>
 							)}
@@ -105,7 +105,7 @@ const Login = () => {
 								</button>
 							</div>
 							{errors.password && (
-								<div className='text-red-700 text-sm '>
+								<div className='text-red-700 text-sm pt-2 '>
 									{errors.password.message}
 								</div>
 							)}

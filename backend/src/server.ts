@@ -1,11 +1,12 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-
-import authRouter from './routes/auth.route.ts'
-import messageRoutes from './routes/message.route.ts'
+import path from 'path'
+import authRouter from './routes/auth.route'
+import messageRoutes from './routes/message.route'
 
 const app = express()
+const __dirname = path.resolve()
 
 app.use(
 	express.json({
@@ -22,5 +23,13 @@ app.use(
 )
 app.use('/api/auth', authRouter)
 app.use('/api/messages', messageRoutes)
+
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, '../frontend/dist')))
+
+	app.get('*', (_req, res) => {
+		res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
+	})
+}
 
 export default app

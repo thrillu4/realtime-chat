@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import { create } from 'zustand'
 import { axiosInstance } from '../lib/axios'
 import type { IChatStore } from '../types'
+import { useAuthStore } from './useAuthStore'
 
 export const useChatStore = create<IChatStore>((set, get) => ({
 	users: [],
@@ -24,7 +25,9 @@ export const useChatStore = create<IChatStore>((set, get) => ({
 			} else if (error instanceof Error) {
 				console.error(error.message)
 			}
-			toast.error('Something went wrong!')
+			toast.error('Something went wrong!', {
+				position: 'bottom-right',
+			})
 		} finally {
 			set({ isUsersLoading: false })
 		}
@@ -41,7 +44,9 @@ export const useChatStore = create<IChatStore>((set, get) => ({
 			} else if (error instanceof Error) {
 				console.error(error.message)
 			}
-			toast.error('Something went wrong!')
+			toast.error('Something went wrong!', {
+				position: 'bottom-right',
+			})
 		} finally {
 			set({ isMessagesLoading: false })
 		}
@@ -59,7 +64,27 @@ export const useChatStore = create<IChatStore>((set, get) => ({
 			if (error instanceof AxiosError) {
 				console.error(error.response?.data?.message ?? error.message)
 			}
-			toast.error('Something went wrong!')
+			toast.error('Something went wrong!', {
+				position: 'bottom-right',
+			})
 		}
+	},
+
+	subscribeToMessage: () => {
+		const { selectedUser } = get()
+		if (!selectedUser) return
+
+		const socket = useAuthStore.getState().socket
+
+		socket?.on('newMessage', (newMessage) => {
+			if (newMessage.senderId !== selectedUser._id) return
+
+			set({ messages: [...get().messages, newMessage] })
+		})
+	},
+
+	unsubscribeFromMessage: () => {
+		const socket = useAuthStore.getState().socket
+		socket?.off('newMessage')
 	},
 }))

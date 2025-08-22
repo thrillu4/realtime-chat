@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { formatMessageTime } from '../lib/utils'
 import { useAuthStore } from '../store/useAuthStore'
 import { useChatStore } from '../store/useChatStore'
@@ -7,13 +7,33 @@ import MessageInput from './MessageInput'
 import MessageSkeleton from './MessageSkeleton'
 
 const ChatContainer = () => {
-	const { getMessages, selectedUser, isMessagesLoading, messages } =
-		useChatStore()
+	const {
+		getMessages,
+		selectedUser,
+		isMessagesLoading,
+		messages,
+		subscribeToMessage,
+		unsubscribeFromMessage,
+	} = useChatStore()
 	const { authUser } = useAuthStore()
+	const messageRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		if (selectedUser?._id) getMessages(selectedUser?._id)
-	}, [selectedUser?._id, getMessages])
+		subscribeToMessage()
+
+		return () => unsubscribeFromMessage()
+	}, [
+		selectedUser?._id,
+		getMessages,
+		subscribeToMessage,
+		unsubscribeFromMessage,
+	])
+
+	useEffect(() => {
+		if (messageRef.current && messages)
+			messageRef.current.scrollTop = messageRef.current.scrollHeight
+	}, [messages])
 
 	if (isMessagesLoading) {
 		return (
@@ -26,10 +46,10 @@ const ChatContainer = () => {
 	}
 
 	return (
-		<div className='flex-1 flex flex-col overflow-auto'>
+		<div className='flex-1 flex flex-col'>
 			<ChatHeader />
 
-			<div className='flex-1 overflow-y-auto p-4 space-y-4'>
+			<div ref={messageRef} className='flex-1 overflow-y-auto p-4 space-y-4'>
 				{messages.map((message, i) => (
 					<div
 						key={i}
@@ -54,7 +74,7 @@ const ChatContainer = () => {
 								{formatMessageTime(message.createdAt)}
 							</time>
 						</div>
-						<div className='chat-bubble flex flex-col'>
+						<div className='chat-bubble flex flex-col break-words whitespace-pre-wrap max-w-[80%]'>
 							{message.image && (
 								<img
 									src={message.image}

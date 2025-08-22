@@ -1,8 +1,9 @@
 import { Response } from 'express'
+import cloudinary from '../lib/cloudinary'
+import { getReceiverSocketId, io } from '../lib/socket'
 import { AuthRequest } from '../middleware/auth.middleware'
 import Message from '../models/message.model'
 import User from '../models/user.model'
-import cloudinary from '../lib/cloudinary'
 
 export const getUsersForSidebar = async (req: AuthRequest, res: Response) => {
 	try {
@@ -73,6 +74,12 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 				image: imageUrl,
 			})
 			await newMessage.save()
+
+			const receiverSocketId = getReceiverSocketId(receiverId)
+			if (receiverSocketId) {
+				io.to(receiverSocketId).emit('newMessage', newMessage)
+			}
+
 			res.status(201).json(newMessage)
 		}
 	} catch (error) {

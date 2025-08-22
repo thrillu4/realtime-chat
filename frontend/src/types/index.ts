@@ -1,3 +1,4 @@
+import type { Socket } from 'socket.io-client'
 import { z } from 'zod'
 
 export interface User {
@@ -25,12 +26,15 @@ export interface IAuthStore {
 	isLoggingIn: boolean
 	isUpdatingProfile: boolean
 	isCheckingAuth: boolean
-	onlineUsers: Omit<User, 'password'>[]
+	onlineUsers: string[]
+	socket: null | Socket
 	checkAuth: () => void
 	signUp: (data: SignUpType) => Promise<void>
 	logout: () => void
 	login: (data: LoginType) => Promise<void>
 	updateProfile: (file: FormData) => void
+	connectSocket: () => void
+	disconnectSocket: () => void
 }
 
 export interface IChatStore {
@@ -43,6 +47,8 @@ export interface IChatStore {
 	getMessages: (userId: string) => Promise<void>
 	setSelectedUser: (selectedUser: Omit<User, 'password'> | null) => void
 	sendMessage: (messageData: Partial<Message>) => Promise<void>
+	subscribeToMessage: () => void
+	unsubscribeFromMessage: () => void
 }
 
 export interface IUseTheme {
